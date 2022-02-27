@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="Multiline to Singleline JS Converter">
+        <meta name="author" content="Nomadical">
+        <meta name="keywords" content="Multiline to Singleline,JS,Multiline to Singleline JS, Multiline to Singleline Converter, Nomadical" >
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" type="icon/ico" href="javascripticon.ico"/>
+        <title>Multiline to Singleline JS</title>
+
+    </head>
+    <style>
+
+        * {box-sizing: border-box;}
+
+        #header {
+            background-color: white;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            padding: 0px;
+            width: 95%;
+            margin-top: 0px;
+            top: 0;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+        }
+        
+        #headercontainer{
+            padding-left: 5%;
+        }
+
+        #body {
+            background-image: url(background.png);
+            background-size: cover; 
+            background-repeat: no-repeat;
+            background-color: #464444;
+        }
+
+        #tablerow {
+            width: 45%; 
+        }
+    </style>
+    <body id="body">
+        <div id="headercontainer">
+            <div id="header">
+                <h1 style="text-align: center; margin: 0px; padding-top: 30px; padding-bottom: 5px;">
+                    Multiline to Singleline JS Converter
+                </h1>
+                <h4 style="text-align: center; margin: 0px; padding-top: 5px; padding-bottom: 30px;">
+                    The tool for converting all your complicated JS code into something that can be run in a browser bookmark
+                </h4>
+            </div>
+        </div>
+        <div style="padding-top: 0px; padding-left: 10%; width: 100%; position: relative;">
+            <table style="width: 90%;"> <!-- Style for testing: border: 1px solid white; -->
+                <tr>
+                    <th id="tablerow">
+                        <h1 style="color: white; width: 100%; text-align: center;"> <!-- Input In -->
+                        Paste your singleline code here
+                        </h1>
+                    </th>
+                    <th style="width: 10%;"></th>
+                    <th id="tablerow">  <!-- Input Out -->
+                        <h1 style="color: white; width: 100%; text-align: center;">
+                        Copy your singleline code from here
+                        </h1>
+                    </th>
+                </tr>
+                <tr>
+                    <th id="tablerow"> <!-- Input In -->
+                        <textarea id="input" style="width: 100%; height: 500px; font-family: 'Courier New', Courier, monospace;"></textarea>
+                    </th>
+                    <th style="width: 10%;"></th>
+                    <th id="tablerow"> <!-- Input Out -->
+                        <textarea id="output" readonly style="width: 100%; height: 500px; font-family: 'Courier New', Courier, monospace;"></textarea>
+                        <!--<input type="text" id="output2" style="width: 100%; height: 500px; font-family: 'Courier New', Courier, monospace;"></textarea>-->
+                    </th>
+                </tr>
+                <tr style="height: 20px;"></tr>
+                <tr>
+                    <th id="tablerow">
+                        <button type="button" id="submit" style="color: green; width: 200px; height: 50px; font-size: 25px;">Convert</button> 
+                    </th>
+                    <th style="width: 10%;"></th>
+                    <th id="tablerow">
+                        <button onclick="copy()" id="copy" type="button" style="color: green; width: 200px; height: 50px; font-size: 25px;">Copy Text</button> 
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <script>
+            function copy() {
+                const copy = document.getElementById("copy");
+                copyText = document.getElementById('output').innerHTML;
+                navigator.clipboard.writeText(copyText);
+                copy.innerText = "Copied!";
+                setTimeout(() => {copy.innerText = "Copy Text";}, 2000);
+            }
+            
+            document.getElementById('submit').onclick = function() {
+                document.getElementById('output').innerHTML = "";
+                output = "javascript: ";
+                input = "";
+                cache = "";
+                comment = false;
+                var textbox = document.getElementById("input").value;
+                //var input = $('textbox').val().split('\n');
+                //document.getElementById('output2').value= textbox;
+                //var input = textbox.value.split("\n");
+                for(var i = 0;i < textbox.length;i++){
+                    line = textbox[i]
+                    if (line == "/" && textbox[i + 1] == "/") {
+                        comment = true;
+                        i++
+                    }
+                    if (comment == false) {
+                        if (line.indexOf('\n') > -1) {
+                            if (line.indexOf(';') < 0 && cache != ";" && cache != "}" && cache != "{")
+                            {
+                            //if (textbox[i + 1] == "}") {
+                            //    line = ""
+                            //}
+                                if (line == "\n" && textbox[i - 1] != "{" && textbox[i + 1] != "}") {
+                                    line = "; "
+                                }
+                                else {
+                                    line = ""
+                                }
+                            }
+                            if (cache == ";") {
+                                line = " "
+                            }
+                            if (cache == "{" || cache == "}") {
+                                line = ""
+                            }
+                        }
+                        if (line != " ") {
+                        output += line
+                        }
+                        if (cache != " ")
+                        {
+                            if (line == " " && textbox[i - 1] != "\n") {
+                                output += line
+                            }
+                        }
+                        cache = line
+                    }
+                    if (comment == true) {
+                        if (line != "\n") {
+                            line = ""
+                        }
+                        else {
+                            comment = false;
+                        }
+                    }
+                    
+                }
+                document.getElementById('output').innerHTML = output;
+            };
+        </script>
+    </body>
+</html>
