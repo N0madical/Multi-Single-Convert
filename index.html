@@ -12,7 +12,9 @@
     </head>
     <style>
 
-        * {box-sizing: border-box;}
+        * {
+            box-sizing: border-box;
+        }
 
         #header {
             background-color: white;
@@ -93,7 +95,7 @@
         <script>
             function copy() {
                 const copy = document.getElementById("copy");
-                copyText = document.getElementById('output').innerHTML;
+                copyText = document.getElementById('output').textContent;
                 navigator.clipboard.writeText(copyText);
                 copy.innerText = "Copied!";
                 setTimeout(() => {copy.innerText = "Copy Text";}, 2000);
